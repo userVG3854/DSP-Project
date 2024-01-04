@@ -12,37 +12,6 @@ topic = client.topics[kafka_topic]
 # WeatherAPI.com API key
 api_key = 'YOUR_WEATHERAPI.COM_API_KEY'
 
-def fetch_weather_data(api_key, city):
-    base_url = 'http://api.openweathermap.org/data/2.5/weather'
-    params = {
-        'q': city,
-        'appid': api_key,
-    }
-
-    response = requests.get(base_url, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Failed to fetch data for {city}: {response.status_code}")
-        return None
-
-def produce_weather_data(api_key, cities):
-    producer = topic.get_sync_producer()
-
-    while True:
-        for city in cities:
-            weather_data = fetch_weather_data(api_key, city)
-            if weather_data:
-                message = {
-                    'city': city,
-                    'temperature': weather_data['main']['temp'],
-                    'description': weather_data['weather'][0]['description'],
-                    'timestamp': int(time.time())
-                }
-                producer.produce(json.dumps(message).encode('utf-8'))
-                print(f"Produced weather data for {city}")
-            time.sleep(10)  # Fetch data every 10 seconds
-
 def fetch_weather_data(city):
     base_url = 'http://api.weatherapi.com/v1/current.json'
     params = {
@@ -82,3 +51,5 @@ def produce_weather_data(cities):
                 print(f"Produced weather data for {city}")
 
             time.sleep(10)  # Fetch data every 10 seconds
+
+
