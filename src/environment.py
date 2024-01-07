@@ -1,5 +1,4 @@
 # Kafka configuration
-KAFKA_BROKER = 'localhost:9092'
-KAFKA_TOPIC_REALTIME = 'weather_data'
-KAFKA_TOPIC_FORECAST = 'weather_forecast'
-KAFKA_TOPIC_HISTORY = 'weather_history'
+KAFKA_BROKER_URL = 'localhost:9092'  # Replace with your Kafka broker URL
+KAFKA_TOPIC_NAME = 'weather_topic'  # Replace with your Kafka topic name
+WEATHER_API_KEY = ''
