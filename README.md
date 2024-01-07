@@ -18,10 +18,6 @@ What things you need to install the software and how to install them:
 
 A step by step series of examples that tell you how to get a development env running:
 
-3. Start your Kafka server
-4. Run the producer script to produce weather data to Kafka
-5. Run the consumer script to consume weather data from Kafka and plot it on a world map
-
 1. Clone the repository:
 
    ```bash
