@@ -1,12 +1,13 @@
 from kafka import KafkaProducer
 import json
 from environment import (
-    WEATHER_API_KEY
+    WEATHER_API_KEY,
+    KAFKA_BROKER_URL
 )
 
 # Define a function to create a Kafka producer
 def create_producer():
-    producer = KafkaProducer(bootstrap_servers='localhost:9092',
+    producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL,
                              value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     return producer
 

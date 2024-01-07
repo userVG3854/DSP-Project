@@ -1,7 +1,7 @@
 import json
 from kafka import KafkaConsumer
 import streamlit as st
-from environment import KAFKA_SERVER_URL, KAFKA_TOPIC_NAME
+from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME
 from dashboard import weather_dashboard
 
 # Function to handle weather data from Kafka message
@@ -33,7 +33,7 @@ def handle_weather_info(msg):
 def consume_messages_from_kafka():
     consumer = KafkaConsumer(
         KAFKA_TOPIC_NAME,
-        bootstrap_servers=KAFKA_SERVER_URL,
+        bootstrap_servers=KAFKA_BROKER_URL,
         value_deserializer=lambda x: json.loads(x.decode("utf-8")),
     )
 
