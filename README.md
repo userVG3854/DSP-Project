@@ -49,6 +49,7 @@ A step by step series of examples that tell you how to get a development env run
     streamlit run consumer_app.py
     python analysis.py
     python analysis2.py
+    python analysis3.py
 
 Explore the scripts for detailed analysis and code explanations.
 
@@ -71,11 +72,11 @@ Explore the scripts for detailed analysis and code explanations.
 
 ## Authors
 
-* **Your Name** - *Initial work* - YourGithubUsername
+* **Grimaud Vianney** - *Initial work* - @userVG3854
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
