@@ -48,6 +48,7 @@ A step by step series of examples that tell you how to get a development env run
     ```bash
     streamlit run consumer_app.py
     python analysis.py
+    python analysis2.py
 
 Explore the scripts for detailed analysis and code explanations.
 
