@@ -5,6 +5,8 @@ from kafka import KafkaConsumer
 import json
 from sklearn.linear_model import SGDRegressor
 from environment import KAFKA_BROKER_URL
+import time
+
 
 def create_geo_df(data):
     # Function to create a GeoDataFrame from weather data
@@ -27,7 +29,7 @@ def plot_weather_data(data):
     plt.title('Real-time Weather Data on World Map')
     plt.show()
 
-def consume_weather_data(cities, max_messages=10):
+def consume_weather_data(cities, max_time=60):
     # Function to consume weather data from Kafka and plot it on a world map
     consumer = KafkaConsumer(
         'weather_topic', # The topic name
@@ -41,7 +43,7 @@ def consume_weather_data(cities, max_messages=10):
     data = {'city': [], 'latitude': [], 'longitude': [], 'temperature': []}
     model = SGDRegressor()
 
-    message_count = 0
+    start_time = time.time()
     for message in consumer:
         if message is not None:
             weather_data = message.value
@@ -56,13 +58,15 @@ def consume_weather_data(cities, max_messages=10):
                 y = [weather_data['current']['temp_c']]
                 model.partial_fit(X, y)
 
-                # Plot updated weather data on a world map
-                geo_df = create_geo_df(data)
-                plot_weather_data(geo_df)
-
-                message_count += 1
-                if message_count >= max_messages:
+                if time.time() - start_time > max_time:
                     break
+
+    # Plot updated weather data on a world map
+    geo_df = create_geo_df(data)
+    plot_weather_data(geo_df)
+
+
+                
 
 
 if __name__ == "__main__":
