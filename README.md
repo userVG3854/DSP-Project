@@ -66,7 +66,6 @@ Explore the scripts for detailed analysis and code explanations.
 - **`analysis.py`**: Python script for analyzing weather data and generating experimental plots.
 - **`kafka_producer.py`**: Python script for producing weather data to Kafka.
 - **`weather_api.py`**: Python module for interacting with the WeatherAPI.com API.
-- **`geo_plots.py`**: Python module for generating geographical plots.
 - **`environment.py`**: Configuration file containing Kafka broker and topic information.
 
 ## Authors
