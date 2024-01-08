@@ -21,8 +21,8 @@ A step by step series of examples that tell you how to get a development env run
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/weather-data-analysis.git
-   cd weather-data-analysis
+   git clone https://github.com/userVG3854/DSP-Project/
+   cd DSP-Project
 
 2. Install dependencies using:
 
@@ -41,12 +41,12 @@ A step by step series of examples that tell you how to get a development env run
 4. Run the producer script to produce weather data to Kafka:
 
     ```bash
-    python -m streamlit run producer_app.py
+    python -m streamlit run kafka_producer.py
 
 5. Run the consumer script to consume weather data from Kafka and plot it on a world map:
 
     ```bash
-    python -m streamlit run consumer_app.py
+    python -m streamlit run kafka_consumer.py
     python analysis.py
     python analysis2.py
     python analysis3.py
