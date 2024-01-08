@@ -48,8 +48,7 @@ A step by step series of examples that tell you how to get a development env run
     ```bash
     python -m streamlit run kafka_consumer.py
     python analysis.py
-    python analysis2.py
-    python analysis3.py
+
 
 Explore the scripts for detailed analysis and code explanations.
 
