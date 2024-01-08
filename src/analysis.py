@@ -4,6 +4,7 @@ from shapely.geometry import Point
 from kafka import KafkaConsumer
 import json
 from sklearn.linear_model import SGDRegressor
+from environment import KAFKA_BROKER_URL
 
 def create_geo_df(data):
     # Function to create a GeoDataFrame from weather data
@@ -30,7 +31,7 @@ def consume_weather_data(cities):
     # Function to consume weather data from Kafka and plot it on a world map
     consumer = KafkaConsumer(
         'weather_topic', # The topic name
-        bootstrap_servers='localhost:9092', # The bootstrap server URL
+        bootstrap_servers=KAFKA_BROKER_URL, # The bootstrap server URL
         auto_offset_reset="earliest", # Start from the beginning of the topic
         enable_auto_commit=True, # Commit the offsets automatically
         group_id="weather-group", # The consumer group id

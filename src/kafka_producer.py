@@ -2,21 +2,20 @@ import json
 from kafka import KafkaProducer
 import streamlit as st
 from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME
-from weather_api import create_producer, send_weather_data, fetch_and_send
+from weather_api import create_producer, fetch_weather_data
 from dashboard import weather_dashboard
 
 # Kafka producer function
 def publish_messages_to_kafka(loc):
     # Instantiate a Kafka producer
     producer = create_producer()
-    weather_info = fetch_and_send(loc)
+    weather_info = fetch_weather_data(location)
 
     if weather_info:
-        result = json.dumps(weather_info).encode("utf-8")
+        # If weather_info is already a JSON string (bytes), pass it directly
+        producer.send(KAFKA_TOPIC_NAME, weather_info)
 
-        # Publish weather data to Kafka topic
-        send_weather_data(producer, KAFKA_TOPIC_NAME, weather_info['location']['name'], weather_info['location']['name'], weather_info['location']['country'])
-        return result
+        return weather_info
 
     return False
 

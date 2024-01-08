@@ -9,6 +9,7 @@ warnings.filterwarnings('ignore')
 
 from kafka import KafkaProducer, KafkaConsumer
 from river import compose, metrics, preprocessing, linear_model, optim
+from environment import KAFKA_BROKER_URL
 
 # Utility functions
 def printmd(text, color=None):
@@ -31,16 +32,16 @@ model = preprocessing.TargetStandardScaler(regressor=model)
 def evaluate_model(model, city):
     print("-----  ON-LINE MACHINE LEARNING FOR {} ----".format(city))
 
-    metric = metrics.Rolling(metrics.MAE(), 7)
+    metric = metrics.Rolling(metrics.MSE(), 7)
     topic_name = city
     topic_predict_name = "predict__{}".format(city)
     consumer_group_name = "{}_on_line_ML".format(city)
 
     consumer = KafkaConsumer(topic_name,
-                             bootstrap_servers='localhost:9092',
+                             bootstrap_servers=KAFKA_BROKER_URL,
                              group_id=consumer_group_name)
 
-    producer = KafkaProducer(bootstrap_servers="localhost:9092")
+    producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL)
 
     weather_data = {}
     nb_msg = 0

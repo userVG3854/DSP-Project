@@ -47,5 +47,3 @@ if __name__ == '__main__':
 
     # Consume Kafka messages
     consume_messages_from_kafka()
-
-

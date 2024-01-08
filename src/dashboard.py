@@ -14,7 +14,7 @@ def weather_dashboard(dashboard_kind: str):
     st.title(f"{dashboard_kind.upper()} : Weather Information")
 
     # Add a logo
-    st.sidebar.image("images/weatherapi.png", width=250)
+    st.sidebar.image("../images/weatherapi.png", width=250)
 
     # Sidebar with instructions for the user
     st.sidebar.markdown(
