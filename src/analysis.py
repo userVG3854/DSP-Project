@@ -43,7 +43,7 @@ def consume_weather_data(cities):
 
     for message in consumer:
         if message is not None:
-            weather_data = json.loads(message.value)  # Removed .decode('utf-8')
+            weather_data = message.value  # Removed .decode('utf-8') and json.loads()
             if weather_data['location']['name'] in cities:
                 data['city'].append(weather_data['location']['name'])
                 data['latitude'].append(weather_data['location']['lat'])
@@ -58,6 +58,7 @@ def consume_weather_data(cities):
                 # Plot updated weather data on a world map
                 geo_df = create_geo_df(data)
                 plot_weather_data(geo_df)
+
 
 if __name__ == "__main__":
     cities = ['New York', 'London', 'Tokyo']  # Specify the cities studied
