@@ -6,7 +6,7 @@ from weather_api import create_producer, fetch_weather_data
 from dashboard import weather_dashboard
 
 # Kafka producer function
-def publish_messages_to_kafka(loc):
+def publish_messages_to_kafka(location):
     # Instantiate a Kafka producer
     producer = create_producer()
     weather_info = fetch_weather_data(location)
