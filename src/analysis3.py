@@ -7,17 +7,17 @@ import pprint
 import warnings
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 from kafka import KafkaProducer, KafkaConsumer
 from river import compose, metrics, preprocessing, linear_model, optim
-from environment import WEATHER_API_KEY, KAFKA_BROKER_URL
+from environment import WEATHER_API_KEY, KAFKA_BROKER_URL  # Assuming you have an environment file
 
 warnings.filterwarnings('ignore')
 
 # Define weather features and target variable
-weather_features = ['temperature', 'humidity', 'wind_speed']  # Replace with actual weather features
-target_variable = 'precipitation'  # Replace with actual target variable
+weather_features = ['temp_c', 'humidity', 'wind_kph']  # Replace with actual weather features
+target_variable = 'precip_mm'  # Replace with actual target variable
 
 # Define the RIVER Regression model
 model = compose.Pipeline(
@@ -31,7 +31,7 @@ model = preprocessing.TargetStandardScaler(regressor=model)
 def evaluate_model(model, city):
     print("-----  ON-LINE MACHINE LEARNING FOR {} ----".format(city))
 
-    metric = metrics.Rolling(metrics.MSE(), 7)
+    metric = metrics.MSE()
     topic_name = city
     topic_predict_name = "predict__{}".format(city)
     consumer_group_name = "{}_on_line_ML".format(city)
@@ -108,7 +108,7 @@ def evaluate_model(model, city):
     y_batch = np.array(y_batch)
 
     # Train a batch learning model
-    batch_model = LinearRegression()
+    batch_model = SGDRegressor()
     batch_model.fit(X_batch, y_batch)
 
     # Make predictions and calculate error
@@ -127,3 +127,4 @@ def evaluate_model(model, city):
 
 # Example usage for a city (you can replace 'New York' with your desired city)
 evaluate_model(model, 'New York')
+

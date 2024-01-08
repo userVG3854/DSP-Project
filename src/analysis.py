@@ -43,7 +43,7 @@ def consume_weather_data(cities):
 
     for message in consumer:
         if message is not None:
-            weather_data = json.loads(message.value.decode('utf-8'))
+            weather_data = json.loads(message.value)  # Removed .decode('utf-8')
             if weather_data['location']['name'] in cities:
                 data['city'].append(weather_data['location']['name'])
                 data['latitude'].append(weather_data['location']['lat'])

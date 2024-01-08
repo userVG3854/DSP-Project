@@ -32,7 +32,7 @@ model = preprocessing.TargetStandardScaler(regressor=model)
 def evaluate_model(model, city):
     print("-----  ON-LINE MACHINE LEARNING FOR {} ----".format(city))
 
-    metric = metrics.Rolling(metrics.MSE(), 7)
+    metric = metrics.MSE()
     topic_name = city
     topic_predict_name = "predict__{}".format(city)
     consumer_group_name = "{}_on_line_ML".format(city)
