@@ -1,4 +1,5 @@
 import json
+import time
 from kafka import KafkaConsumer
 import streamlit as st
 from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME
@@ -74,14 +75,17 @@ def handle_weather_info(msg):
     st.success(f"Batch regression MAE: {batch_mae}")
 
 # Function to consume messages from Kafka topic
-def consume_messages_from_kafka():
+def consume_messages_from_kafka(max_time=60):
     consumer = KafkaConsumer(
         KAFKA_TOPIC_NAME,
         bootstrap_servers=KAFKA_BROKER_URL,
         value_deserializer=lambda x: json.loads(x.decode("utf-8")),
     )
 
+    start_time = time.time()
     for msg in consumer:
+        if time.time() - start_time > max_time:
+            break
         handle_weather_info(msg)
 
 # Update the Streamlit app with data from the background thread
@@ -90,4 +94,4 @@ if __name__ == '__main__':
     weather_dashboard("consumer")
 
     # Consume Kafka messages
-    consume_messages_from_kafka()
+    consume_messages_from_kafka(max_time=60)
