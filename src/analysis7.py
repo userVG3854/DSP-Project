@@ -49,15 +49,16 @@ def handle_weather_info(msg):
     ax1.plot(time_data, temperature_data, color=color)
     ax1.tick_params(axis='y', labelcolor=color)
 
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
+    ax2 = ax1.twinx()
     color = 'tab:blue'
-    ax2.set_ylabel('Humidity (%)', color=color)  # we already handled the x-label with ax1
+    ax2.set_ylabel('Humidity (%)', color=color)
     ax2.plot(time_data, humidity_data, color=color)
     ax2.tick_params(axis='y', labelcolor=color)
 
-    fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    plt.show()
+    fig.tight_layout()
+    
+    # Display the Matplotlib figure in Streamlit
+    st.pyplot(fig)
 
 # Function to consume messages from Kafka topic
 def consume_messages_from_kafka():
