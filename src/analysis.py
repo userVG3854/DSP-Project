@@ -70,10 +70,3 @@ if __name__ == "__main__":
     consume_weather_data(cities)
 
 
-                
-
-
-if __name__ == "__main__":
-    cities = ['New York', 'London', 'Tokyo']  # Specify the cities studied
-    # Uncomment the line below to continuously consume and plot real-time weather data from Kafka
-    consume_weather_data(cities)
