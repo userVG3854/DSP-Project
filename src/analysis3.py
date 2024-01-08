@@ -11,35 +11,30 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 from kafka import KafkaProducer, KafkaConsumer
 from river import compose, metrics, preprocessing, linear_model, optim
-from environment import WEATHER_API_KEY, KAFKA_BROKER_URL  # Assuming you have an environment file
+from environment import WEATHER_API_KEY, KAFKA_BROKER_URL
 
 warnings.filterwarnings('ignore')
 
 # Define weather features and target variable
-weather_features = ['temp_c', 'humidity', 'wind_kph']  # Replace with actual weather features
-target_variable = 'precip_mm'  # Replace with actual target variable
+weather_features = ['temp_c', 'humidity', 'wind_kph']
+target_variable = 'precip_mm'
 
 # Define the RIVER Regression model
 model = compose.Pipeline(
     ('scale', preprocessing.StandardScaler()),
     ('lin_reg', linear_model.LinearRegression(intercept_lr=0, optimizer=optim.SGD(0.03)))
-)
-
-model = preprocessing.TargetStandardScaler(regressor=model)
+) >> preprocessing.TargetStandardScaler()
 
 # Define Kafka Consumer function for getting weather data and running online machine learning
 def evaluate_model(model, city):
-    print("-----  ON-LINE MACHINE LEARNING FOR {} ----".format(city))
+    print(f"-----  ON-LINE MACHINE LEARNING FOR {city} ----")
 
     metric = metrics.MSE()
     topic_name = city
-    topic_predict_name = "predict__{}".format(city)
-    consumer_group_name = "{}_on_line_ML".format(city)
+    topic_predict_name = f"predict__{city}"
+    consumer_group_name = f"{city}_on_line_ML"
 
-    consumer = KafkaConsumer(topic_name,
-                             bootstrap_servers=KAFKA_BROKER_URL,
-                             group_id=consumer_group_name)
-
+    consumer = KafkaConsumer(topic_name, bootstrap_servers=KAFKA_BROKER_URL, group_id=consumer_group_name)
     producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL)
 
     weather_data = {}
@@ -48,8 +43,7 @@ def evaluate_model(model, city):
     temps_cpu = 0
 
     # Collect a batch of data for batch learning
-    X_batch = []
-    y_batch = []
+    X_batch, y_batch = [], []
 
     try:
         for message in consumer:
@@ -84,32 +78,25 @@ def evaluate_model(model, city):
                 y_batch.append(y)
 
                 if nb_msg == 5:
-                    print("")
+                    print("\n")
                     pprint.pprint(predict_result)
-                    print("")
+                    print("\n")
 
                 if nb_msg % 50 == 0:
-                    print("{} - {} prediction values sent to the Kafka topic {}" \
-                            .format(time.strftime("%d/%m/%Y %H:%M:%S"),
-                                    nb_msg,
-                                    topic_predict_name))
+                    print(f"{time.strftime('%d/%m/%Y %H:%M:%S')} - {nb_msg} prediction values sent to the Kafka topic {topic_predict_name}")
+
     except KeyboardInterrupt:
-        print("{} - {} prediction values sent to the Kafka topic {}" \
-                            .format(time.strftime("%d/%m/%Y %H:%M:%S"),
-                                    nb_msg,
-                                    topic_predict_name))
+        print(f"{time.strftime('%d/%m/%Y %H:%M:%S')} - {nb_msg} prediction values sent to the Kafka topic {topic_predict_name}")
         print("\n-------  END OF ON-LINE MACHINE LEARNING  -------")
     except Exception as e:
         print("An error has occurred")
         print(e)
 
     # Convert lists to numpy arrays for use with scikit-learn
-    X_batch = np.array(X_batch)
-    y_batch = np.array(y_batch)
+    X_batch, y_batch = np.array(X_batch), np.array(y_batch)
 
     # Train a batch learning model
-    batch_model = SGDRegressor()
-    batch_model.fit(X_batch, y_batch)
+    batch_model = SGDRegressor().fit(X_batch, y_batch)
 
     # Make predictions and calculate error
     y_pred_batch = batch_model.predict(X_batch)
@@ -127,4 +114,5 @@ def evaluate_model(model, city):
 
 # Example usage for a city (you can replace 'New York' with your desired city)
 evaluate_model(model, 'New York')
+
 

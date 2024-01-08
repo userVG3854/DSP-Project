@@ -61,9 +61,13 @@ def consume_weather_data(cities, max_time=60):
                 if time.time() - start_time > max_time:
                     break
 
-    # Plot updated weather data on a world map
+    # After consuming data, plot the weather data on a world map
     geo_df = create_geo_df(data)
     plot_weather_data(geo_df)
+
+if __name__ == "__main__":
+    cities = ['New York', 'London', 'Tokyo']  # Specify the cities studied
+    consume_weather_data(cities)
 
 
                 
