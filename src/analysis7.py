@@ -4,7 +4,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME
 from dashboard import weather_dashboard
-import threading
 
 # Global variables to store weather data for plotting
 temperature_data = []
@@ -41,6 +40,18 @@ def handle_weather_info(msg):
 
     st.success(f"Last updated: {weather_info['current']['last_updated']}")
 
+# Function to consume messages from Kafka topic
+def consume_messages_from_kafka():
+    consumer = KafkaConsumer(
+        KAFKA_TOPIC_NAME,
+        bootstrap_servers=KAFKA_BROKER_URL,
+        value_deserializer=lambda x: json.loads(x.decode("utf-8")),
+    )
+
+    for msg in enumerate(consumer):
+        handle_weather_info(msg)
+
+def plot_weather_data():
     # Create a plot of temperature and humidity over time
     fig, ax1 = plt.subplots()
 
@@ -61,19 +72,6 @@ def handle_weather_info(msg):
     # Display the Matplotlib figure in Streamlit
     st.pyplot(fig)
 
-# Function to consume messages from Kafka topic
-def consume_messages_from_kafka(max_messages=3):
-    consumer = KafkaConsumer(
-        KAFKA_TOPIC_NAME,
-        bootstrap_servers=KAFKA_BROKER_URL,
-        value_deserializer=lambda x: json.loads(x.decode("utf-8")),
-    )
-
-    for i, msg in enumerate(consumer):
-        handle_weather_info(msg)
-        if i >= max_messages - 1:
-            break
-
 # Update the Streamlit app with data from the background thread
 if __name__ == '__main__':
     # Streamlit dashboard
@@ -81,3 +79,4 @@ if __name__ == '__main__':
 
     # Consume Kafka messages
     consume_messages_from_kafka()
+    plot_weather_data()
