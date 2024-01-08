@@ -27,7 +27,7 @@ def plot_weather_data(data):
     plt.title('Real-time Weather Data on World Map')
     plt.show()
 
-def consume_weather_data(cities):
+def consume_weather_data(cities, max_messages=10):
     # Function to consume weather data from Kafka and plot it on a world map
     consumer = KafkaConsumer(
         'weather_topic', # The topic name
@@ -41,9 +41,10 @@ def consume_weather_data(cities):
     data = {'city': [], 'latitude': [], 'longitude': [], 'temperature': []}
     model = SGDRegressor()
 
+    message_count = 0
     for message in consumer:
         if message is not None:
-            weather_data = message.value  # Removed .decode('utf-8') and json.loads()
+            weather_data = message.value
             if weather_data['location']['name'] in cities:
                 data['city'].append(weather_data['location']['name'])
                 data['latitude'].append(weather_data['location']['lat'])
@@ -58,6 +59,10 @@ def consume_weather_data(cities):
                 # Plot updated weather data on a world map
                 geo_df = create_geo_df(data)
                 plot_weather_data(geo_df)
+
+                message_count += 1
+                if message_count >= max_messages:
+                    break
 
 
 if __name__ == "__main__":
