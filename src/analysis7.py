@@ -48,7 +48,7 @@ def consume_messages_from_kafka():
         value_deserializer=lambda x: json.loads(x.decode("utf-8")),
     )
 
-    for msg in enumerate(consumer):
+    for msg in consumer:
         handle_weather_info(msg)
 
 def plot_weather_data():
