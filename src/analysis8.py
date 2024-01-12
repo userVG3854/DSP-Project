@@ -31,7 +31,7 @@ def send_weather_data(location):
         producer.flush()
 
 # Load geospatial data
-france = gpd.read_file('france.geojson')
+france = gpd.read_file('regions.geojson')
 
 # Initialize plot for streaming data focused on France
 fig, ax = plt.subplots(figsize=(10, 5))
