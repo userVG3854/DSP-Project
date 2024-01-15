@@ -77,7 +77,7 @@ def update_plot(frame):
         map_plot.plot(x, y, 'o', markersize=10, color=color_temp)
 
         # Display the weather icon
-        imagebox = OffsetImage(plt.imread(icon_url), zoom=0.1)
+        imagebox = OffsetImage(plt.imread('http:'+icon_url), zoom=0.1)
         ab = AnnotationBbox(imagebox, (x, y), frameon=False)
         ax.add_artist(ab)
 
