@@ -7,8 +7,8 @@ from kafka import KafkaConsumer, KafkaProducer
 from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME, WEATHER_API_KEY
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-import datetime
+from PIL import Image
+from io import BytesIO
 
 # Define a function to create a Kafka producer
 def create_producer():
@@ -33,11 +33,6 @@ def send_weather_data(location):
         producer.send(KAFKA_TOPIC_NAME, weather_data)
         producer.flush()
 
-# Function to get the current date and time
-def get_current_datetime():
-    now = datetime.datetime.now()
-    return now.strftime("%Y-%m-%d %H:%M:%S")
-
 # Initialize Basemap for streaming data focused on France
 fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -53,9 +48,9 @@ map_plot.drawcoastlines()
 map_plot.drawcountries()
 
 # Colormap for temperature
-norm_temp = Normalize(-10, 40)
-cmap_temp = plt.get_cmap('coolwarm')
-sm_temp = ScalarMappable(norm_temp, cmap_temp)
+norm = Normalize(-10, 40)
+cmap = plt.get_cmap('Reds')
+sm = ScalarMappable(norm, cmap)
 
 # Function to update the plot
 def update_plot(frame):
@@ -68,26 +63,22 @@ def update_plot(frame):
         lat = weather_info['location']['lat']
         lon = weather_info['location']['lon']
         temp = weather_info['current']['temp_c']
-        icon_url = weather_info['current']['condition']['icon']
-
+        icon_url = 'http:' + weather_info['current']['condition']['icon']  # Adding the base URL
         x, y = map_plot(lon, lat)
-        color_temp = sm_temp.to_rgba(temp)
-
-        # Plot the temperature as a colored dot
-        map_plot.plot(x, y, 'o', markersize=10, color=color_temp)
-
-        # Display the weather icon
-        imagebox = OffsetImage(plt.imread('http:'+icon_url), zoom=0.1)
-        ab = AnnotationBbox(imagebox, (x, y), frameon=False)
-        ax.add_artist(ab)
-
+        color = sm.to_rgba(temp)
+        map_plot.plot(x, y, 'o', markersize=5, color=color)
+        plt.text(x, y, f"{temp}°C", fontsize=8)
+    
+        # Download and display weather icon
+        response = requests.get(icon_url)
+        icon_img = Image.open(BytesIO(response.content))
+        plt.imshow(icon_img, extent=[x-1, x+1, y-1, y+1], origin='upper')
+    
         break  # Process one message per frame
-
-    # Add title with the region (France) and current date and time
-    ax.set_title(f"France - {get_current_datetime()}", fontsize=14)
 
     return ax,
 
 # Create animation
 ani = FuncAnimation(fig, update_plot, interval=10000, blit=False)
 plt.show()
+
