@@ -30,8 +30,11 @@ def send_weather_data(location):
         producer.send(KAFKA_TOPIC_NAME, weather_data)
         producer.flush()
 
+
 # Load geospatial data
-france = gpd.read_file('../images/regions.geojson')
+with open('../images/regions.geojson', 'r') as f:
+    geojson_data = json.load(f)
+france = gpd.GeoDataFrame.from_features(geojson_data['features'])
 
 # Initialize plot for streaming data focused on France
 fig, ax = plt.subplots(figsize=(10, 5))
