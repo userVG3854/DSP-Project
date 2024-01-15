@@ -49,7 +49,7 @@ def update_plot(frame):
         icon_url = weather_info['current']['condition']['icon']
         
         # Color the region based on temperature
-        france.loc[france['region'] == region, 'temp'] = temp
+        france.loc[france['properties']['nom'] == region, 'temp'] = temp
         france.plot(column='temp', cmap='coolwarm', linewidth=0.8, ax=ax, edgecolor='0.8')
         
         # Display weather icon

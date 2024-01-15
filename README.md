@@ -43,11 +43,12 @@ A step by step series of examples that tell you how to get a development env run
     ```bash
     python -m streamlit run kafka_producer.py
 
-5. Run the consumer script to consume weather data from Kafka and plot it on a world map:
+5. Run the consumer script to consume weather data from Kafka and plot it on a french map:
 
     ```bash
     python -m streamlit run kafka_consumer.py
-    python analysis.py
+    python kafka_mapping.py
+6. Finally, 
 
 
 Explore the scripts for detailed analysis and code explanations.
@@ -57,13 +58,12 @@ Explore the scripts for detailed analysis and code explanations.
 * Python - The programming language used
 * Kafka - Used for real-time data streaming
 * Streamlit - Used to create the web application
-* GeoPandas - Used to create the GeoDataFrame and plot the data
 
 
 ## Project Structure
 
 - **`dashboard.py`**: Streamlit dashboard for visualizing weather data.
-- **`analysis.py`**: Python script for analyzing weather data and generating experimental plots.
+- **`kafka_mapping.py`**, **`kafka_regression.py`**: Python script for analyzing weather data and generating experimental plots.
 - **`kafka_producer.py`**: Python script for producing weather data to Kafka.
 - **`weather_api.py`**: Python module for interacting with the WeatherAPI.com API.
 - **`environment.py`**: Configuration file containing Kafka broker and topic information.
