@@ -4,7 +4,7 @@ import streamlit as st
 from environment import KAFKA_BROKER_URL, KAFKA_TOPIC_NAME
 from dashboard import weather_dashboard
 
-# Function to handle weather data from Kafka message
+# Handle weather data from Kafka message
 def handle_weather_info(msg):
     # Extract the message value
     weather_info = msg.value
@@ -29,7 +29,7 @@ def handle_weather_info(msg):
 
     st.success(f"Last updated: {weather_info['current']['last_updated']}")
 
-# Function to consume messages from Kafka topic
+# Consume messages from Kafka topic
 def consume_messages_from_kafka():
     consumer = KafkaConsumer(
         KAFKA_TOPIC_NAME,
@@ -40,10 +40,9 @@ def consume_messages_from_kafka():
     for msg in consumer:
         handle_weather_info(msg)
 
-# Update the Streamlit app with data from the background thread
+
 if __name__ == '__main__':
-    # Streamlit dashboard
+
     weather_dashboard("consumer")
 
-    # Consume Kafka messages
     consume_messages_from_kafka()

@@ -18,12 +18,10 @@ def fetch_weather_data(location, date):
 
 
 def process_weather_data(data):
-    # Check if 'forecastday' data is available
     if 'forecast' in data and 'forecastday' in data['forecast'] and len(data['forecast']['forecastday']) > 0:
         df = pd.json_normalize(data['forecast']['forecastday'][0]['hour'])
         return df[['time', 'temp_c', 'humidity', 'wind_kph', 'pressure_mb']]
     else:
-        # Return an empty DataFrame or handle the error as appropriate
         return pd.DataFrame()
 
 
@@ -93,6 +91,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # Streamlit dashboard
     weather_dashboard("analysis")
     main()

@@ -22,7 +22,7 @@ def fetch_weather_data(location):
     else:
         return None
 
-# Function to send weather data to Kafka
+# Send weather data to Kafka
 def send_weather_data(location):
     weather_data = fetch_weather_data(location)
     if weather_data:
