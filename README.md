@@ -47,8 +47,13 @@ A step by step series of examples that tell you how to get a development env run
 
     ```bash
     python -m streamlit run kafka_consumer.py
-    python kafka_mapping.py
-6. Finally, 
+    python -m streamlit run kafka_mapping.py
+
+6. Finally, plot different variables and try to implement regression methods:
+
+    ```bash
+    python -m streamlit run kafka_regression.py
+
 
 
 Explore the scripts for detailed analysis and code explanations.
